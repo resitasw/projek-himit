@@ -4,16 +4,135 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Vue</title>
+  <style>
+      div{
+          margin-bottom: 10px;
+      }
+  </style>
 </head>
 <body>
   <div id="app">
+      <div><input type="text" v-model="url"></div>
+      <div>
+          <input type="text" v-model="kataKunci">
+          <button @click="clearKeyword">Clear</button>
+      </div>
+      <div>
+          <button @click="firstClicked" :disabled="!paginasi.first">First</button>
+          <button @click="prevClicked" :disabled="!paginasi.prev">Prev</button>
+          <button @click="nextClicked" :disabled="!paginasi.next">Next</button>
+          <button @click="lastClicked" :disabled="!paginasi.last">Last</button>
+     </div>
+     <div>
+         page : {{paginasi.page}}
+     </div>
+     <div>
+         total hasil : {{paginasi.total}}
+     </div>
+     <div>
+         <ul>
+             <li v-for="(hasil,indeks) in listData" :key="indeks"><span v-html="hasil.text"></span></li>
+         </ul>
+     </div>
+     <!-- <div>
+         <pre>{{ toStringhehe(paginasi) }}</pre>
+     </div>
+     <div>
+        <pre>{{ toStringhehe(listData) }}</pre>
+    </div> -->
+    <!-- <div>
+        <pre>{{ toStringhehe(url) }}</pre>
+    </div> -->
+    
 
   </div>
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
   <script src="index.js"></script>
   <script>
     new Vue({
-      el: '#app'
+      el: '#app',
+      data:{
+          url:'https://www.youtube.com/watch?v=YEoCQSXl_EY',
+          kataKunci:'not',
+          paginasi:{
+              first:null,
+              prev:null,
+              next:null,
+              last:null,
+              total:0,
+              page:null
+          },
+          listData:[]
+      },
+      methods:{
+          async search(key,url,pagination){
+            
+            try{
+                let link = `https://cari-teks-video-api.vercel.app/api/search?q=${key}&url=${encodeURIComponent(url)}`
+                if (pagination){
+                    link = pagination
+                }
+                console.log("ini linknyaaa",link)
+                const respon = await fetch(link).then(response =>{
+                    if (response.ok){
+                        console.log(response)
+                        return response.json()
+                    }
+                    console.log(response)
+                    return []
+                })
+                console.log(respon)
+                // _.ok?_.json():[])
+                this.listData = respon.data
+                this.paginasi.first = respon.first
+                this.paginasi.last = respon.last
+                this.paginasi.prev = respon.prev
+                this.paginasi.next = respon.next
+                this.paginasi.total = respon.total
+                this.paginasi.page = respon.page
+            } catch (error){
+                console.log(error)
+            }
+            
+
+          },
+          clearKeyword(event){
+              console.log("Sapu sapu",event)
+              this.kataKunci=null
+          },
+          firstClicked(event){
+              this.search(this.kataKunci,this.url,this.paginasi.first)
+
+          },
+          prevClicked(event){
+              this.search(this.kataKunci,this.url,this.paginasi.prev)
+
+        },
+        nextClicked(event){
+            this.search(this.kataKunci,this.url,this.paginasi.next)
+
+        },
+        lastClicked(event){
+            this.search(this.kataKunci,this.url,this.paginasi.last)
+
+        },
+      },
+      computed:{
+        toStringhehe(){
+              return (hm)=>{
+                  return JSON.stringify(hm,null,2)}
+          }
+      },
+      watch:{
+        //   kataKunci(kataunci){
+        //       console.log(kataunci)
+        //       this.search(kataunci,this.url,this.paginasi)
+        //   }
+        kataKunci: pDebounce(function kataKunci(kataunci){
+              console.log(kataunci)
+              this.search(kataunci,this.url)
+          },500)
+      }
     })
   </script>
 </body>
