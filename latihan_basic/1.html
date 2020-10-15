@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vue</title>
+  <style>
+      .blue{
+          background-color:black;
+          color: white;
+      }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <h1 v-if="haha">
+        {{link}}
+    </h1>
+    <h2 v-else-if="hoho">
+        Else if
+    </h2>
+    <h3 v-else="">
+        jfsdjgfhjdsgfjhsdg
+    </h3>
+    <ul>
+        <li v-for="(nama,id) in daftarnama" :key="id">
+            {{nama}},{{id}}
+        </li>
+    </ul>
+    <ul>
+        <li v-for="(nama,id) in daftarnama" :key="id">
+            {{nama}},{{id}}
+        </li>
+    </ul>
+    <ul>
+        <li v-for="nama in dictaja">
+            {{nama}}
+        </li>
+    </ul>
+
+    <input :value="hehe"/>
+    <h1 style="color:red;">
+        {{sayIt}}
+    </h1>
+    <div>
+        <button @click="shout">cups</button>
+        <button @click="shout">cantek</button>
+        <button @click="shout($event)">aihi</button>
+        <button @click="shout($event)">cobaja</button>
+    </div>
+    <h2>{{opsi}}</h2>
+    <!-- <div>
+        <label for="opsi1">Opsi 1</label>
+        <input type="radio" value="opsi1" name="opsi" v-model="opsi"/>
+        <label for="opsi2">Opsi 2</label>
+        <input type="radio" value="opsi2" name="opsi" v-model="opsi"/>
+    </div> -->
+    <div>
+        <div v-for="option in options">
+            <label :for="option.label">{{option.label}}</label>
+            <input type="radio" :value="option.nilai" name="opsi" v-model="opsi"/>
+        </div>
+    </div>
+    <button-component warna="blue" @ku-klik-nih="okebuk($event)"/>
+    
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script>
+    Vue.component('button-component',{
+        template:`<button :class="warna" @click="$emit('ku-klik-nih',$event)">Yahhooo</button>`,
+        props:['warna']
+    })
+    new Vue({
+      el: '#app',
+      data:{
+          link:'https://www.youtube.com/watch?v=wzd9sTO-fNA',
+          hehe:"Aigoooo",
+          haha:true,
+          hoho:true,
+          daftarnama:[
+              'resita',
+              'sri',
+              'wahyuni'
+          ],
+          dictaja:{
+              'hehe':'hehe',
+              'h':'hkjhhg'
+          },
+          sayIt:null,
+          opsi:null,
+          options:[
+              {
+                  label:'opsi1',
+                  nilai:'gumiho'
+              },
+              {
+                  label:'opsi2',
+                  nilai:'BBF'
+              },
+              {
+                  label:'opsi3',
+                  nilai:'apalah'
+              }
+          ]
+
+      },
+      methods:{
+          okebuk(event){
+            console.log("HAYOLOOOOHHH")
+          },
+          shout(event) {
+              console.log(event)
+              
+              if(event.target.innerText=='cups'){
+                this.sayIt = "HAHAHHAHA Kamu CUPUUU"
+              } else if(event.target.innerText=='cantek'){
+                this.sayIt = "KERASNYA RAHANGMU"
+              } else {
+                this.sayIt = "asal"
+              }
+          }
+      }
+    })
+  </script>
+</body>
+</html>
