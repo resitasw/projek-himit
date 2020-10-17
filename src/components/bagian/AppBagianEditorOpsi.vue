@@ -128,57 +128,57 @@ export default {
         console.log(error)
       }
     },
-    // async ketikaTombolUnduhDiKlik() {
-    //   try {
-    //     this.$store.dispatch('proses/tampilkanProses', null)
-    //     const objekUrl = {
-    //       url: URL_API,
-    //       query: {
-    //         lang: this.bahasaPemrogramanTerpilih,
-    //         fileName: this.namaBerkas,
-    //         highlight: this.highlight,
-    //         twoslash: this.twoslashTerpilih,
-    //         download: 1
-    //       }
-    //     }
-    //     const url = stringifyUrl(objekUrl, OPSI_STRINGIFY)
-    //     await unduhKode(url, {
-    //       code: this.inputKode
-    //     })
-    //   } catch (error) {
-    //     const dataNotifikasiGalat = {
-    //       apakahTampil: true,
-    //       pesan: error.message || 'Gagal mengunduh'
-    //     }
-    //     this.$store.dispatch('notifikasi/tampilkanNotifikasi', dataNotifikasiGalat)
-    //     console.log(error)
-    //   } finally {
-    //     this.$store.dispatch('proses/hilangkanProses', null)
-    //   }
-    // },
-    // async ketikaTombolSimpanDiKlik() {
-    //   try {
-    //     const konten = cleanDeep({
-    //       kode: this.inputKode,
-    //       bahasaPemrograman: this.bahasaPemrogramanTerpilih,
-    //       highlight: this.highlight,
-    //       namaBerkas: this.namaBerkas,
-    //       twoslash: this.twoslashTerpilih
-    //     })
-    //     await this.$store.dispatch('kode/simpanKode', {
-    //       idPengguna: this.$store.state.pengguna.idPengguna,
-    //       konten: konten
-    //     })
-    //     await this.$emit('tersimpan')
-    //   } catch (error) {
-    //     const dataNotifikasiGalat = {
-    //       apakahTampil: true,
-    //       pesan: error.message || 'Gagal menyimpan'
-    //     }
-    //     this.$store.dispatch('notifikasi/tampilkanNotifikasi', dataNotifikasiGalat)
-    //     console.log(error)
-    //   }
-    // }
+    async ketikaTombolUnduhDiKlik() {
+      try {
+        // this.$store.dispatch('proses/tampilkanProses', null)
+        const objekUrl = {
+          url: URL_API,
+          query: {
+            lang: this.bahasaPemrogramanTerpilih,
+            fileName: this.namaBerkas,
+            highlight: this.highlight,
+            twoslash: this.twoslashTerpilih,
+            download: 1
+          }
+        }
+        const url = stringifyUrl(objekUrl, OPSI_STRINGIFY)
+        await unduhKode(url, {
+          code: this.inputKode
+        })
+      } catch (error) {
+        const dataNotifikasiGalat = {
+          apakahTampil: true,
+          pesan: error.message || 'Gagal mengunduh'
+        }
+        // this.$store.dispatch('notifikasi/tampilkanNotifikasi', dataNotifikasiGalat)
+        console.log(error)
+      } finally {
+        // this.$store.dispatch('proses/hilangkanProses', null)
+      }
+    },
+    async ketikaTombolSimpanDiKlik() {
+      try {
+        const konten = cleanDeep({
+          kode: this.inputKode,
+          bahasaPemrograman: this.bahasaPemrogramanTerpilih,
+          highlight: this.highlight,
+          namaBerkas: this.namaBerkas,
+          twoslash: this.twoslashTerpilih
+        })
+        await this.$store.dispatch('kode/simpanKode', {
+          idPengguna: this.$store.state.pengguna.idPengguna,
+          konten: konten
+        })
+        await this.$emit('tersimpan')
+      } catch (error) {
+        // const dataNotifikasiGalat = {
+        //   apakahTampil: true,
+        //   pesan: error.message || 'Gagal menyimpan'
+        // }
+        // this.$store.dispatch('notifikasi/tampilkanNotifikasi', dataNotifikasiGalat)
+        console.log(error)
+      }
+    }
   }
 }
 </script>

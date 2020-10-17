@@ -23,15 +23,11 @@
           @tersimpan="dapatkanDaftarKode"
           @reset="ketikaTombolResetDiKlik"
         />
-        
-        </div>
-        <!-- <hr>
         <app-bagian-editor-kode
           :input-kode.sync="dataKode.inputKode"
           :hasil-highlight="hasilHighlight"
           :bahasa-pemrograman-terpilih="dataKode.bahasaPemrogramanTerpilih"
         />
-        <hr>
         <div v-if="$store.state.pengguna.idPengguna">
           <app-bagian-opsi-daftar-kode
             :halaman.sync="filter.halaman"
@@ -46,6 +42,11 @@
             :dapatkan-daftar-kode="dapatkanDaftarKode"
           />
         </div>
+      </div>
+        <!-- <hr>
+        
+        <hr>
+        
         <app-notifikasi />
         <app-proses /> -->
       </div>
@@ -55,30 +56,30 @@
 </template>
 
 <script>
-// import { stringifyUrl } from 'query-string'
-// import debounce from 'debounce-fn'
-// import cleanDeep from 'clean-deep'
+import { stringifyUrl } from 'query-string'
+import debounce from 'debounce-fn'
+import cleanDeep from 'clean-deep'
 
 import AppBagianPengguna from './components/bagian/AppBagianPengguna'
 import AppBagianEditorOpsi from './components/bagian/AppBagianEditorOpsi'
-// import AppBagianEditorKode from './components/bagian/AppBagianEditorKode'
-// import AppBagianOpsiDaftarKode from './components/bagian/AppBagianOpsiDaftarKode'
-// import AppBagianDaftarKode from './components/bagian/AppBagianDaftarKode'
+import AppBagianEditorKode from './components/bagian/AppBagianEditorKode'
+import AppBagianOpsiDaftarKode from './components/bagian/AppBagianOpsiDaftarKode'
+import AppBagianDaftarKode from './components/bagian/AppBagianDaftarKode'
 
 // import AppNotifikasi from './components/AppNotifikasi'
 // import AppProses from './components/AppProses'
 
 import { dapatkanOpsi, kirimData, unduhKode } from './utils'
-// import { URL_API, OPSI_STRINGIFY } from './constants'
+import { URL_API, OPSI_STRINGIFY } from './constants'
 
 export default {
   name: 'App',
   components: {
     AppBagianPengguna,
     AppBagianEditorOpsi,
-    // AppBagianEditorKode,
-    // AppBagianOpsiDaftarKode,
-    // AppBagianDaftarKode,
+    AppBagianEditorKode,
+    AppBagianOpsiDaftarKode,
+    AppBagianDaftarKode,
 
     // AppNotifikasi,
     // AppProses
@@ -103,30 +104,30 @@ export default {
       daftarBahasaPemrograman: []
     }
   },
-  // watch: {
-  //   '$store.state.pengguna.idPengguna'(idPengguna) {
-  //     if (idPengguna) {
-  //       this.dapatkanDaftarKode()
-  //     }
-  //   },
-  //   dataKode: {
-  //     handler: debounce(function(dataKode) {
-  //       this.hasilHighlight = ''
-  //       this.highlighter(dataKode.inputKode)
-  //     }, { wait: 500 }),
-  //     deep: true
-  //   },
-  //   filter: {
-  //     handler: debounce(function() {
-  //       this.dapatkanDaftarKode()
-  //     }, { wait: 500 }),
-  //     deep: true
-  //   }
-  // },
-  // async created() {
-  //   await this.dapatkanDaftarBahasaPemrograman()
-  //   await this.dapatkanDaftarKode()
-  // },
+  watch: {
+    '$store.state.pengguna.idPengguna'(idPengguna) {
+      if (idPengguna) {
+        this.dapatkanDaftarKode()
+      }
+    },
+    dataKode: {
+      handler: debounce(function(dataKode) {
+        this.hasilHighlight = ''
+        this.highlighter(dataKode.inputKode)
+      }, { wait: 500 }),
+      deep: true
+    },
+    filter: {
+      handler: debounce(function() {
+        this.dapatkanDaftarKode()
+      }, { wait: 500 }),
+      deep: true
+    }
+  },
+  async created() {
+    await this.dapatkanDaftarBahasaPemrograman()
+    await this.dapatkanDaftarKode()
+  },
   methods: {
     ketikaTombolResetDiKlik() {
       this.dataKode = {
@@ -200,56 +201,57 @@ export default {
   //       console.log(error)
   //     }
   //   },
-  //   async dapatkanDaftarBahasaPemrograman() {
-  //     try {
-  //       const respon = await dapatkanOpsi()
-  //       if (respon.success && !respon.error) {
-  //         this.daftarBahasaPemrograman = respon.data.languages
-  //       }
-  //     } catch (error) {
-  //       const dataNotifikasiGalat = {
-  //         apakahTampil: true,
-  //         pesan: error.message
-  //       }
-  //       this.$store.dispatch('notifikasi/tampilkanNotifikasi', dataNotifikasiGalat)
-  //       console.log(error)
-  //     }
-  //   },
-  //   async highlighter(inputKode, download) {
-  //     try {
-  //       this.$store.dispatch('proses/tampilkanProses', null)
-  //       const objekUrl = {
-  //         url: URL_API,
-  //         query: {
-  //           lang: this.dataKode.bahasaPemrogramanTerpilih,
-  //           fileName: this.dataKode.namaBerkas,
-  //           highlight: this.dataKode.highlight,
-  //           twoslash: this.dataKode.twoslashTerpilih,
-  //           download
-  //         }
-  //       }
-  //       const url = stringifyUrl(objekUrl, OPSI_STRINGIFY)
+    async dapatkanDaftarBahasaPemrograman() {
+      try {
+        const respon = await dapatkanOpsi()
+        if (respon.success && !respon.error) {
+          this.daftarBahasaPemrograman = respon.data.languages
+        }
+      } catch (error) {
+        const dataNotifikasiGalat = {
+          apakahTampil: true,
+          pesan: error.message
+        }
+        this.$store.dispatch('notifikasi/tampilkanNotifikasi', dataNotifikasiGalat)
+        console.log(error)
+      }
+    },
+    async highlighter(inputKode, download) {
+      try {
+        // this.$store.dispatch('proses/tampilkanProses', null)
+        const objekUrl = {
+          url: URL_API,
+          query: {
+            lang: this.dataKode.bahasaPemrogramanTerpilih,
+            fileName: this.dataKode.namaBerkas,
+            highlight: this.dataKode.highlight,
+            twoslash: this.dataKode.twoslashTerpilih,
+            download
+          }
+        }
+        const url = stringifyUrl(objekUrl, OPSI_STRINGIFY)
 
-  //       const respon = await kirimData(url, {
-  //         code: inputKode
-  //       })
+        const respon = await kirimData(url, {
+          code: inputKode
+        })
 
-  //       if (respon.success && !respon.error) {
-  //         this.hasilHighlight = respon.data
-  //       } else {
-  //         throw new Error(respon.message)
-  //       }
-  //     } catch (error) {
-  //       const dataNotifikasiGalat = {
-  //         apakahTampil: true,
-  //         pesan: error.message || 'Bahasa Pemrograman dan Kode wajib diisi'
-  //       }
-  //       this.$store.dispatch('notifikasi/tampilkanNotifikasi', dataNotifikasiGalat)
-  //       console.log(error)
-  //     } finally {
-  //       this.$store.dispatch('proses/hilangkanProses', null)
-  //     }
-  //   }
+        if (respon.success && !respon.error) {
+          this.hasilHighlight = respon.data
+        } else {
+          console.log("Throw error")
+          throw new Error(respon.message)
+        }
+      } catch (error) {
+        const dataNotifikasiGalat = {
+          apakahTampil: true,
+          pesan: error.message || 'Bahasa Pemrograman dan Kode wajib diisi'
+        }
+        // this.$store.dispatch('notifikasi/tampilkanNotifikasi', dataNotifikasiGalat)
+        console.log(error)
+      } finally {
+        // this.$store.dispatch('proses/hilangkanProses', null)
+      }
+    }
   }
 }
 </script>
