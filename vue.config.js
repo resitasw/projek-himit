@@ -1,6 +1,6 @@
 module.exports = {
     runtimeCompiler: true,
-    publicPath: '/proek-himit/',
+    publicPath: '/projek-himit/',
     // publicPath:
     // process.env.NODE_ENV === "production" ? "/" : "/",
 
